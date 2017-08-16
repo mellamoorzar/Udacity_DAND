@@ -1,0 +1,4 @@
+References
+• matplotlib (http://matplotlib.org/)
+• ShareLaTeX (https://www.sharelatex.com/learn/Main_Page)
+• wikipedia (https://en.wikipedia.org/wiki/Stroop_effect)
