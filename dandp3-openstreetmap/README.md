@@ -1,3 +1,13 @@
+# Project 3 Wrangle OpenStreetMap Data
+
+### Environment
+* Python 3
+* SQLite
+
+### Map Area
+* Istanbul, Turkey
+
+### Project Contents
 REPORT:
 * OpenStreetMap_Data_Wrangling.ipynb
 * OpenStreetMap_Data_Wrangling.html
