@@ -23,6 +23,22 @@ The data set of Titanic is a simple one, but the whole story behind it is not th
 
 My principle is to make it simple and make it easy for readers to get the whole story.
 
+### Initial design decisions
+
+#### Hierarchy & chart type
+
+I put the story into 3 parts. 
+1. Distribution of passengers: I used a bar chart to visualize the passenger distribution on `Pclass` and `Age-Gender` category. I think this is the most intuitive way, and is most familiar to the reader. With 3 pie charts, I wanted to emphasize the proportion of these passenger groups.
+2. Survival facts of passengers: Again I used a bar chart to visualize the overall status of survived and non-survived passengers. And I put 2 groups of donut charts together to compare the survival rate of women, children and men, and the survival rate of 1st class, 2nd class and 3rd class passenger.
+3. Families on board: I filtered out the families with more than 5 members on board and plotted the family survival rate with bar charts. Yes I think bar chart is easy to understand in this situation. I also used table to list all family members with more details like `Gender`, `Age`, `Fare` and `Survived?`. Tables are suitable for details.
+
+#### Visual encodings
+
+Most features I visualized in the story are categorical, then color, texture and shape are all appropriate encodings. But I chose color only, because I think it's stronger than other two.
+
+
+### Final version
+
 In the final version, I made it 5 parts:
 1. Opening: gives a short introduction of the disaster and throws the question we are about to figure out.
 2. Distribution of passengers: shows how many women, children or men were on board, and the percentages of the 1st class 2nd class and 3rd class passengers.
