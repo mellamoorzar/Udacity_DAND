@@ -52,7 +52,9 @@ I fixed it by shifting `BELFER ROBERT` values 1 column to the left, and `BHATNAG
 ### Q2
 **What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it. (You do not necessarily have to use it in the final analysis, only engineer and test it.) In your feature selection step, if you used an algorithm like a decision tree, please also give the feature importances of the features that you use, and if you used an automated feature selection function like SelectKBest, please report the feature scores and reasons for your choice of parameter values.  [relevant rubric items: “create new features”, “intelligently select features”, “properly scale features”]**
 
-Created new features:
+New features:
+
+I created 3 new features.
 ```
 1. financial_total
 2. fraction_from_poi
@@ -60,12 +62,8 @@ Created new features:
 ```
 `financial_total` was the features as a total of financial features (`total_payments` + `total_stock_value`). `fraction_from_poi` was to check the fraction of emails, received from POI, to all received emails. `fraction_to_poi` was the fraction of emails, sent to POI, to all sent emails.
 
-Selected features intelligently:
-
-Finally, the features used in the final algorithms were selected according to feature importances with decision tree.
-
+Feature importances with forests of trees:
 ```
-Feature importances more than 0:
 ['fraction_to_poi', 0.34628571428571447]
 ['shared_receipt_with_poi', 0.22013095238095232]
 ['expenses', 0.16820105820105813]
@@ -73,17 +71,55 @@ Feature importances more than 0:
 ['fraction_from_poi', 0.06128571428571427]
 ['deferral_payments', 0.047666666666666663]
 ```
+According to DecisionTree, `fraction_to_poi` I created got the highest features importance for the model.
+
+Feature scores with k best:
+```
+4 best features:
+[('fraction_to_poi', 25.578788236346952),
+ ('total_stock_value', 22.510549090242055),
+ ('exercised_stock_options', 22.348975407306217),
+ ('bonus', 20.792252047181535)]
+```
+`fraction_to_poi` got the highest features score.
+
+RFECV: leverage the power of recursive feature selection to automate the selection process and find a good indication of the number of relevant features.
+![plot](./RFECV.png)
+```
+Selected features:
+['expenses', 'exercised_stock_options', 'restricted_stock', 'total_stock_value', 'to_messages', 'from_messages', 'from_this_person_to_poi', 'from_poi_to_this_person']
+```
+RFECV result was so different with feature importances and feature scores. So I sorted data with RFECV in data_2, so that I could test the algorithms separately.
 
 ### Q3
 **What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?  [relevant rubric item: “pick an algorithm”]**
 
-Four different algorithms were tested for this effort: Naive Bayes, Decision Tree, Ada Boost and Random Forest. With `Pipeline` library, I made a pipe with 3 steps for each test: first to standardize features with `StandardScaler`, apply `PCA`, and then fit the algorithm classifer.
+I've played with 5 machine learning algorithms:
+* Naive Bayes
+* Decision Tree
+* Ada Boost
+* Random Forest
+* K-means
 
-* 'Naive Bayes' came out with the lowest scores, both on 'Precision' and 'Recall'.
-* 'Random Forest' had the highest 'Precision' score but was a little bit week on 'Recall'.
-* 'Ada Boost' and the 'Decision Tree' did not show sigificant difference on both 'Precision' and 'Recall' scores, but 'Decision Tree' is much more faster than 'Ada Boost'.
+I made a pipe with 3 steps for each test:
+* standardized features with `StandardScaler`;
+* applied `PCA` to decrease the dimensionality of the data.
+* applied the test algorithm
 
-My final choice of algorithms was 'Decision Tree'.
+Results:
+```
+                          without RFECV                   with RFECV
+              Precision  Recall      F1    Precision  Recall      F1
+  Naive Bayes   0.26133 0.29400 0.27671      0.30298 0.25450 0.27663
+Decision Tree   0.33170 0.33900 0.33531      0.30340 0.33450 0.31819
+    Ada Boost   0.32789 0.33150 0.32969      0.30762 0.34300 0.32435
+Random Forest   0.42715 0.12900 0.19816      0.37955 0.13550 0.19971
+      K-means   0.12222 0.09900 0.10939      0.13806 0.46450 0.21285
+```
+
+I found out that RFECV is more efficient on naive bayes and k-means, but not on decision tree, adaboost or random forest.
+
+Random forest got the highest precision, but was so weak on recall. I ended up using Decision Tree Classifier. Decision tree showed the best result and was significantly faster than RandomForest so I could easily tune it.
 
 ### Q4
 **What does it mean to tune the parameters of an algorithm, and what can happen if you don’t do this well?  How did you tune the parameters of your particular algorithm? What parameters did you tune? (Some algorithms do not have parameters that you need to tune -- if this is the case for the one you picked, identify and briefly explain how you would have done it for the model that was not your final choice or a different model that does utilize parameter tuning, e.g. a decision tree classifier).  [relevant rubric items: “discuss parameter tuning”, “tune the algorithm”]**
@@ -98,9 +134,15 @@ For my final choice of algorithms, 'Decision Tree', I used `GridSearchCV` librar
 ### Q5
 **What is validation, and what’s a classic mistake you can make if you do it wrong? How did you validate your analysis?  [relevant rubric items: “discuss validation”, “validation strategy”]**
 
-Validation is a process of training and testing a machine learning algorithm in order to assess the performance, and to prevent over fitting. The classic mistake we can make is to validate a model on the same data set as train it.
+The validation is a process of model performance evaluation. The classic mistake we can make is to use small data set for the model training or validate model on the same data set as train it.
 
-In this project, I used provided testing script which performs stratified shuffle split cross validation approach with `StratifiedShuffleSplit` library.
+In this project, I used provided testing script which performs SSSCV (stratified shuffle split cross validation) approach with `StratifiedShuffleSplit` library.
+
+Our dataset is small and skewed towards non-POI, the chance of randomly splitting skewed and non representative validation sub-sets could be high, therefore we need to use stratification (preservation of the percentage of samples for each class) to achieve robustness in a dataset with the aforementioned limitations. Otherwise, we would not be able to assess, in the validation phase, the real potential of our algorithm in terms of performance metrics.
+
+I used F1 score as key measure of algorithms' accuracy in this project. It considers both precision and recall of the evaluation.
+
+Precision can be interpreted as the likelihood that a person identified as a POI is actually a true POI. Recall is the likelihood that true POI is identified. And F1 score can be interpreted as a weighted average of the precision and recall.
 
 ### Q6
 **Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance. [relevant rubric item: “usage of evaluation metrics”]
@@ -114,9 +156,10 @@ There are many different ways to measure the performance of a machine learning a
 
 From testing script, we came out the following evaluation metrics:
 ```
-Precision:         0.68002
-Recall:            0.60250
-F1:                0.63892
+           before tuning after tuning 
+Precision:       0.33170      0.68002
+   Recall:       0.33900      0.60250
+       F1:       0.33531      0.63892
 ```
 
-The precision score of 0.68 means, among all persons predicted as POIs, 68% were true POIs. While the recall score of 0.60 means, among all true POIs, 60% had been identified in our prediction.
+The precision score of 0.68 means, 68% person identified as a POI is actually a true POI. And the recall score of 0.60 means, 60% true POI is identified.
