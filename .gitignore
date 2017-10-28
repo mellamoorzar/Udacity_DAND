@@ -3,3 +3,10 @@
 dandp5-stroopeffect/.ipynb_checkpoints/Stroop Effect Analysis-checkpoint.ipynb
 dandp2-titanic/.ipynb_checkpoints/Test-checkpoint.ipynb
 dandp2-titanic/.ipynb_checkpoints/Titanic_Data_Investigation-checkpoint.ipynb
+*.osm
+*.db
+P3/Data/nodes.csv
+P3/Data/nodes_tags.csv
+P3/Data/ways.csv
+P3/Data/ways_nodes.csv
+P3/Data/ways_tags.csv
