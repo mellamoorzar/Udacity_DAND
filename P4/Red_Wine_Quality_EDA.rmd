@@ -26,7 +26,7 @@ library(gridExtra)
 ```
 
 ```{r Load_the_Data, echo=FALSE}
-red_wine <- read.csv('data/wineQualityReds.csv')
+red_wine <- read.csv('Data/wineQualityReds.csv')
 ```
 
 Univariate Plots Section
