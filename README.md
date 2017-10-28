@@ -3,7 +3,7 @@
 
 ## About
 
-This repository contains project works for Udacity's Data Analyst Nanodegree from the September 2017.
+This repository contains project works for Udacity's Data Analyst Nanodegree.
 
 ## Projects
 
