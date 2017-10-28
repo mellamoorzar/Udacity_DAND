@@ -6,7 +6,7 @@ This is Udacity's Data Analyst Nanodegree project work which to help us identify
 Use real-life data provided by Bay Area Bike Share to determine differences in usage between commuters and tourists' ridership patterns, average duration of trips, and more.
 
 ## Environments
-***
+
 Anaconda with Python 2.7.12
 * [Evironment for Mac](https://github.com/mellamoorzar/Udacity_DAND/blob/master/Evironments/dand-env-mac.yaml)
 * [Evironment for Windows](https://github.com/mellamoorzar/Udacity_DAND/blob/master/Evironments/dand-env-win.yaml)
@@ -14,7 +14,7 @@ Anaconda with Python 2.7.12
 Jupyter Notebook
 
 ## File List
-***
+
 **Main Report:**
 
 [Analyze_Bay_Area_Bike_Share_Data.ipynb](Analyze_Bay_Area_Bike_Share_Data.ipynb)
